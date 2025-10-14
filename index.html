@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soldier Sleeves</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            color: #ffd700;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .subtitle {
+            color: #b0b0b0;
+            font-size: 1.1em;
+        }
+
+        .filters {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .filter-group {
+            margin-bottom: 20px;
+        }
+
+        .filter-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .filter-label {
+            display: block;
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            color: #e0e0e0;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: #ffd700;
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: #ffd700;
+            color: #1a1a2e;
+            border-color: #ffd700;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 25px;
+            color: #e0e0e0;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #ffd700;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .search-box::placeholder {
+            color: #888;
+        }
+
+        .results-info {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #b0b0b0;
+            font-size: 1.1em;
+        }
+
+        .insignia-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .insignia-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            backdrop-filter: blur(10px);
+        }
+
+        .insignia-card:hover {
+            transform: translateY(-5px);
+            border-color: #ffd700;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .insignia-image {
+            width: 100%;
+            height: 200px;
+            background: rgba(255, 255, 255, 1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            border: 2px solid rgba(255, 215, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .insignia-image img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        .insignia-image.loading {
+            background: rgba(255, 255, 255, 0.05);
+            font-size: 2em;
+            color: #888;
+        }
+
+        .insignia-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 8px;
+        }
+
+        .insignia-nickname {
+            color: #b0b0b0;
+            font-style: italic;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+
+        .insignia-description {
+            color: #d0d0d0;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+        }
+
+        .insignia-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .tag {
+            padding: 4px 10px;
+            background: rgba(255, 215, 0, 0.2);
+            border-radius: 12px;
+            font-size: 0.8em;
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+		
+        .insignia-link a {
+            font-size: 0.8em;
+            color: #ffd700;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+            font-size: 1.2em;
+        }
+
+        .reset-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 30px;
+            background: rgba(255, 215, 0, 0.2);
+            border: 2px solid #ffd700;
+            color: #ffd700;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .reset-btn:hover {
+            background: #ffd700;
+            color: #1a1a2e;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .insignia-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Soldier Sleeves</h1>
+            <p class="subtitle">Explore and filter through Army Soldier Sleeve Insignia</p>
+        </header>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label class="filter-label">Search</label>
+                <input type="text" class="search-box" id="searchBox" placeholder="Search by unit name or description...">
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Shape</label>
+                <div class="filter-options" id="shapeFilters"></div>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Features</label>
+                <div class="filter-options" id="featureFilters"></div>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Colors</label>
+                <div class="filter-options" id="colorFilters"></div>
+            </div>
+
+            <button class="reset-btn" id="resetBtn">Reset All Filters</button>
+        </div>
+
+        <div class="results-info" id="resultsInfo"></div>
+        <div class="insignia-grid" id="insigniaGrid"></div>
+    </div>
+
+    <script>
+        const insigniaData = [
+            {
+                name: "1st Infantry Division",
+                nickname: "The Big Red One",
+                description: "On an olive drab shield 2 1/2 inches (6.35 cm) in width and 3 3/4 inches (9.53 cm) in height overall (the parallel sides 2 1/2 inches (6.35 cm) in length with a 90 degree angle pointed base) a red Arabic numeral \"1\" (1 3/4 inches (4.45 cm) in height overall).",
+                shape: "Shield",
+                features: ["Number"],
+                colors: ["Red", "Olive Drab"],
+                image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=3676&size=150",
+				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=6377&CategoryId=3611&grp=2&menu=Uniformed%20Services&ps=24&p=0"
+            },
+            {
+                name: "2nd Infantry Division",
+                nickname: "Indianhead",
+                description: "Upon a five pointed white star whose points lie in the circumference of an imaginary circle 3 1/2 inches (8.89 cm) in diameter an Indian's head with war bonnet in profile, face red, bonnet blue with outline of feathers in blue. The star to be superimposed upon a black shield, of dimensions such that the points of the star shall lie at a distance of 1/8 inch (.32 cm) from the perimeter.",
+                shape: "Shield",
+                features: ["Star", "Person"],
+                colors: ["Black", "White"],
+                image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=3682&size=150"
+            },
+            {
+                name: "3rd Infantry Division",
+                nickname: "Rock of the Marne",
+                description: "Upon a blue square 2 inches (5.08 cm), three white stripes each 3/8 inch (.95 cm) in width from heraldic sinister chief to dexter base; the blue background between the white stripes also being 3/8 inch (.95 cm) in width; all within a 1/8 inch (.32 cm) Army Green border. The overall dimension is 2 1/4 inches (5.72 cm) on each side.",
+                shape: "Square",
+                features: ["Stripes"],
+                colors: ["Blue", "White"],
+                image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=3687&size=150"
+            },
+            {
+                name: "4th Infantry Division",
+                nickname: "Ivy Division",
+                description: "On a light khaki square, each side 2 inches (5.08 cm) in width overall and with one angle up, four green ivy leaves arranged per cross issuing from a small open circle (one leaf in each angle of the square and the vertical and horizontal axis each 2 11/32 inches (5.95 cm) in length) all within a 1/8 inch (.32 cm) light khaki border.",
+                shape: "Square",
+                features: ["Plant", "Leaves"],
+                colors: ["Green", "Tan"],
+                image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=3692&size=150"
+            },
+            {
+                name: "7th Infantry Division",
+                nickname: "Bayonet",
+                description: "On a red disc 2 1/4 inches (5.72 cm) in diameter a black \"hour glass\" of two pyramids point to point whose bases are 1 inch (2.54 cm) in width, all within a 1/8 inch (.32 cm) Army green border.",
+                shape: "Circle",
+                features: ["Geometric"],
+                colors: ["Red", "Black"],
+                image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=3703&size=150"
+            },
+            {
+                name: "25th Infantry Division",
+                nickname: "Tropic Lightning",
+                description: "On a red taro leaf, 2 7/8 inches (7.30 cm) in height, and 2 inches (5.08 cm) in width at the widest point, with stem up, surrounded by a 1/8 inch (.32 cm) yellow border, a yellow lightning flash per pale 1 13/16 inches (4.60 cm) in height.",
+                shape: "Irregular",
+                features: ["Lightning", "Plant", "Leaf"],
+                colors: ["Red", "Yellow"],
+                image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=3739&size=150"
+            },
+			{
+                name: "34th Infantry Division",
+                nickname: "Red Bull",
+                description: "On a black olla with a 1/8 inch (.32 cm) black border, 2 inches (5.08 cm) in width and 2 1/4 inches (5.72 cm) in height, a red bull skull.",
+                shape: "Irregular",
+                features: ["Animal", "Bull"],
+                colors: ["Red", "Black"],
+                image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=3766&size=150",
+				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=6467&CategoryId=3653&grp=2&menu=Uniformed%20Services&ps=24&p=0"
+            },
+            {
+                name: "82nd Airborne Division",
+                nickname: "All American",
+                description: "Upon a red square 2 3/8 inches (6.03 cm) on a side a blue disc 1 3/4 inches (4.45 cm) in diameter with the letters AA in white. The inner elements of the two A's vertical lines and the outer elements arcs of a circle 1 3/8 inches (3.49 cm) in diameter, elements of the letters 1/8 inch (.32 cm) in width. Worn immediately above the square is a blue tab with the word \"AIRBORNE\" in white.",
+                shape: "Square",
+                features: ["Letters"],
+                colors: ["Blue", "Red", "White"],
+                image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=2332&size=150",
+				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=4997&CategoryId=2846&grp=2&menu=Uniformed%20Services&ps=24&p=0"
+            },
+            {
+                name: "101st Airborne Division",
+                nickname: "Screaming Eagles",
+                description: "On a shield 2-1/2 inches (6.35 cm) in height overall, Sable the head of a bald eagle Proper. Worn immediately above the insignia is a Black tab inscribed \"AIRBORNE\" in Yellow.",
+                shape: "Shield",
+                features: ["Eagle", "Animal"],
+                colors: ["Black", "White", "Yellow"],
+                image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=2335&size=150",
+				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=5000&CategoryId=2847&grp=2&menu=Uniformed%20Services&ps=24&p=0"
+            },
+            {
+                name: "1st Armored Division",
+                nickname: "Old Ironsides",
+                description: "An equilateral triangle, one point up, above a horizontal tab attached in base, the overall dimensions of triangle and tab is 4 1/16 inches (10.32 cm) in height and 3 7/8 (9.84 cm) inches in width, the triangle is divided into three sections, the upper section yellow, the dexter section blue and the sinister section red, overall a gun bendwise in front of a tank track and wheels all black surmounted by a red lightning flash bend sinisterwise. In the apex the Arabic numeral \"1\" in black, all within a 1/8 inch (.32 cm) green border. The tab is yellow with a 1/8 inch (.32 cm) green border with the inscription \"OLD IRONSIDES\" in black letters 5/16 inch (.79 cm) in height.",
+                shape: "Triangle",
+                features: ["Tank", "Cannon", "Weapon"],
+                colors: ["Yellow", "Red", "Blue"],
+                image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=2582&size=150",
+				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=5264&CategoryId=3006&grp=2&menu=Uniformed%20Services&ps=24&p=0"
+            },
+	        {
+                name: "1st Corps",
+                nickname: "America's Corps",
+                description: "On a black disc 2 1/4 inches (5.72 cm) in diameter, a white circle 2 inches (5.08 cm) in diameter and 1/4 inch (.64 cm) in width.",
+                shape: "Circle",
+                features: ["Circle"],
+                colors: ["Black", "White"],
+                image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=3017&size=150",
+				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=5707&CategoryId=3243&grp=2&menu=Uniformed%20Services&ps=24&p=0"
+            },		
+            {
+                name: "1st Cavalry Division",
+                nickname: "First Team",
+                description: "On a yellow triangular Norman shield with rounded corners 5 1/4 inches (13.34 cm) in height overall, a black diagonal stripe extending over the shield from upper left to lower right and in the upper right a black horse's head cut off diagonally at the neck all within a 1/8 inch (.32 cm) green border.",
+                shape: "Shield",
+                features: ["Horse", "Animal"],
+                colors: ["Yellow", "Black"],
+                image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=2759&size=150",
+				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=5445&CategoryId=3108&grp=2&menu=Uniformed%20Services&ps=24&p=0"
+            },
+			
+            {
+                name: "3rd Chemical Brigade",
+                nickname: "",
+                description: "A purple hexagon, 3 1/2 inches (8.89 cm) in height overall, edged with a 1/8 inch (.32 cm) gold border, with scarlet flames issuing from base throughout, surmounted by a black arrowhead charged with the numeral \"3\" in gold.",
+                shape: "Hexagon",
+                features: ["Fire", "Arrow", "Number"],
+                colors: ["Yellow", "Blue", "Red", "Black"],
+                image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=2849&size=150",
+				link: "https://tioh.army.mil/Catalog/HeraldryMulti.aspx?CategoryId=3324&grp=2&menu=Uniformed%20Services"
+            },				
+            {
+                name: "1st Engineer Brigade",
+                nickname: "",
+                description: "On a blue rectangular background with a rounded top, 3 1/8 inches (7.94 cm) in width and 3 1/4 inches (8.26 cm) in height, a modern anchor palewise behind a sub-machine gun fesswise on which is perched an eagle with wings displayed and inverted all in golden yellow.",
+                shape: "Irregular",
+                features: ["Gun", "Animal", "Eagle", "Anchor", "Weapon"],
+                colors: ["Yellow", "Blue"],
+                image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=3111&size=150",
+				link: "https://tioh.army.mil/Catalog/HeraldryMulti.aspx?CategoryId=3324&grp=2&menu=Uniformed%20Services"
+            },			
+            {
+                name: "1st Maneuver Enhancement Brigade",
+                nickname: "",
+                description: "A rectangular shape device pointed at base 3 1/4 inches (8.26 cm) in height and 2 1/4 inches (5.72 cm) in width overall divided per pale golden yellow and teal blue, a silver gray sword palewise point down with a black hilt, on the hilt and upper portion of the blade is a scarlet fusil; all within a 1/8 inch (.32 cm) black border.",
+                shape: "Shield",
+                features: ["Sword"],
+                colors: ["Yellow", "Teal"],
+                image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=3973&size=150",
+				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=6682&CategoryId=3760&grp=2&menu=Uniformed%20Services&ps=24&p=0"
+            },		
+            {
+                name: "10th Mountain Division",
+                nickname: "Climb to Glory",
+                description: "On a blue powder keg-like background with a 1/8 inch (.32 cm) white border 2 1/2 inches (6.35 cm) in height and 2 3/16 inches (5.56 cm) in width two bayonets in saltire throughout scarlet fimbriated white. Worn immediately above the insignia is a blue tab with the word \"MOUNTAIN\" in white.",
+                shape: "Irregular",
+                features: ["Sword", "Weapon"],
+                colors: ["Blue", "Red", "White"],
+                image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=3100&size=150",
+				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=5788&CategoryId=3316&grp=2&menu=Uniformed%20Services&ps=24&p=0"
+            },
+            {
+                name: "347th Support Group",
+                nickname: "",
+                description: "On a vertical rectangular embroidered item arched outwardly at top and bottom consisting of the background divided diagonally crossed, from upper left to lower right and upper right to lower left and horizontally into six parts, alternating red and white, surmounted in the middle by a gold compass rose; all within a 1/8 inch (.32 cm) blue border. Overall dimensions are 2 1/4 inches (5.72 cm) in width and 2 3/4 inches (6.99 cm) in length.",
+                shape: "Rectangle",
+                features: ["Compass", "Star"],
+                colors: ["White", "Red", "Yellow"],
+                image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=5393&size=150",
+				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=8131&CategoryId=4517&grp=2&menu=Uniformed%20Services&ps=24&p=0"
+            },				
+            {
+                name: "1st Sustainment Brigade",
+                nickname: "",
+                description: "On a buff vertical rectangular embroidered device coming to a 90-degree angle point at base, a yellow reversed chevron surmounted over the chevron a vertical red sword, throughout, blade pointing up; all within a 1/8 inch (.32 cm) red border. Overall dimensions are 2 inches (5.08 cm) in width and 2 3/4 inches (6.99 cm) in length.",
+                shape: "Shield",
+                features: ["Sword", "Weapon"],
+                colors: ["Buff", "Red", "Yellow"],
+                image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=5556&size=150",
+				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=8296&CategoryId=4609&grp=3&menu=Uniformed%20Services&ps=24&p=0"
+            },			
+	        {
+                name: "US Army Central",
+                nickname: "",
+                description: "On a blue disc 2 1/4 inches (5.72 cm) in diameter a white letter \"A\" with members 1/8 inch (.32 cm) wide within a red circle 2 inches (5.08 cm) in diameter and 3/16 inch (.48 cm) in width.",
+                shape: "Circle",
+                features: ["Circle", "Letters"],
+                colors: ["White", "Red", "Blue"],
+                image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=2642&size=150",
+				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=5328&CategoryId=3036&grp=2&menu=Uniformed%20Services&ps=24&p=0"
+            },			
+        ];
+
+        let activeFilters = {
+            shape: [],
+            features: [],
+            colors: [],
+            search: ""
+        };
+
+        // Extract unique values for filters
+        const shapes = [...new Set(insigniaData.map(i => i.shape))].sort();
+        const features = [...new Set(insigniaData.flatMap(i => i.features))].sort();
+        const colors = [...new Set(insigniaData.flatMap(i => i.colors))].sort();
+
+        // Create filter buttons
+        function createFilterButtons(container, items, filterType) {
+            container.innerHTML = items.map(item => 
+                `<button class="filter-btn" data-type="${filterType}" data-value="${item}">${item}</button>`
+            ).join('');
+        }
+
+        createFilterButtons(document.getElementById('shapeFilters'), shapes, 'shape');
+        createFilterButtons(document.getElementById('featureFilters'), features, 'features');
+        createFilterButtons(document.getElementById('colorFilters'), colors, 'colors');
+
+        // Filter button click handler
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const type = this.dataset.type;
+                const value = this.dataset.value;
+                
+                this.classList.toggle('active');
+                
+                if (this.classList.contains('active')) {
+                    activeFilters[type].push(value);
+                } else {
+                    activeFilters[type] = activeFilters[type].filter(v => v !== value);
+                }
+                
+                renderInsignia();
+            });
+        });
+
+        // Search box handler
+        document.getElementById('searchBox').addEventListener('input', function(e) {
+            activeFilters.search = e.target.value.toLowerCase();
+            renderInsignia();
+        });
+
+        // Reset button handler
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            activeFilters = {
+                shape: [],
+                features: [],
+                colors: [],
+                search: ""
+            };
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('searchBox').value = '';
+            renderInsignia();
+        });
+
+        // Filter and render insignia
+        function renderInsignia() {
+            const filtered = insigniaData.filter(insignia => {
+                // Search filter
+                if (activeFilters.search) {
+                    const searchTerm = activeFilters.search;
+                    const searchableText = `${insignia.name} ${insignia.nickname} ${insignia.description}`.toLowerCase();
+                    if (!searchableText.includes(searchTerm)) return false;
+                }
+
+                // Shape filter
+                if (activeFilters.shape.length > 0) {
+                    if (!activeFilters.shape.includes(insignia.shape)) return false;
+                }
+
+                // Features filter
+                if (activeFilters.features.length > 0) {
+                    if (!activeFilters.features.some(f => insignia.features.includes(f))) return false;
+                }
+
+                // Colors filter
+                if (activeFilters.colors.length > 0) {
+                    if (!activeFilters.colors.some(c => insignia.colors.includes(c))) return false;
+                }
+
+                return true;
+            });
+
+            const grid = document.getElementById('insigniaGrid');
+            const resultsInfo = document.getElementById('resultsInfo');
+            
+            resultsInfo.textContent = `Showing ${filtered.length} of ${insigniaData.length} insignia`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div class="no-results">No insignia match your filters. Try adjusting your selection.</div>';
+                return;
+            }
+
+            grid.innerHTML = filtered.map(insignia => `
+                <div class="insignia-card">
+                    <div class="insignia-image">
+                        <img src="${insignia.image}" alt="${insignia.name}" onerror="this.parentElement.innerHTML='<span style=\\'font-size: 4em; color: #888;\\'>🎖️</span>'">
+                    </div>
+                    <div class="insignia-name">${insignia.name}</div>
+                    <!-- <div class="insignia-nickname">"${insignia.nickname}"</div> -->
+                    <div class="insignia-description">${insignia.description}</div>
+					<div class="insignia-link"><a href="${insignia.link}" target="_new">Army Institute of Heraldry page ☍</a></div>
+                    <div class="insignia-tags">
+                        <span class="tag">${insignia.shape}</span>
+                        ${insignia.features.map(f => `<span class="tag">${f}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initial render
+        renderInsignia();
+    </script>
+</body>
+</html>

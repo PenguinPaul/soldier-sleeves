@@ -140,7 +140,12 @@
 			transition: all 0.3s ease;
 			border: 2px solid transparent;
 			backdrop-filter: blur(10px);
+			display: none;
 		}
+		
+	.insignia-card.visible {
+		display: block;
+	}
 
 		.insignia-card:hover {
 			transform: translateY(-5px);
@@ -471,8 +476,8 @@
 				shape: "Rectangle",
 				features: ["Sword", "Sun", "Taegeuk"],
 				colors: ["Green", "Blue", "Red", "Yellow"],
-				image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=1320&size=150",
-				link: "https://tioh.army.mil/Catalog/HeraldryMulti.aspx?CategoryId=8532&grp=2&menu=Uniformed%20Services"
+				image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=4240&size=150",
+				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=6951&CategoryId=3909&grp=2&menu=Uniformed%20Services&ps=24&p=0"
 			},
 			{
 				name: "300th Military Police Brigade",
@@ -491,8 +496,8 @@
 				shape: "Shield",
 				features: ["Castle"],
 				colors: ["Red", "Yellow"],
-				image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=1320&size=150",
-				link: "https://tioh.army.mil/Catalog/HeraldryMulti.aspx?CategoryId=8532&grp=2&menu=Uniformed%20Services"
+				image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=4368&size=150",
+				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=7085&CategoryId=3974&grp=2&menu=Uniformed%20Services&ps=24&p=0"
 			},
 			{
 				name: "10th Mountain Division",
@@ -520,7 +525,7 @@
 				description: "On a buff vertical rectangular embroidered device coming to a 90-degree angle point at base, a yellow reversed chevron surmounted over the chevron a vertical red sword, throughout, blade pointing up; all within a 1/8 inch (.32 cm) red border. Overall dimensions are 2 inches (5.08 cm) in width and 2 3/4 inches (6.99 cm) in length.",
 				shape: "Shield",
 				features: ["Sword", "Weapon"],
-				colors: ["Buff", "Red", "Yellow"],
+				colors: ["Tan", "Red", "Yellow"],
 				image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=5556&size=150",
 				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=8296&CategoryId=4609&grp=3&menu=Uniformed%20Services&ps=24&p=0"
 			},
@@ -544,6 +549,7 @@
 				image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=2642&size=150",
 				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=5328&CategoryId=3036&grp=2&menu=Uniformed%20Services&ps=24&p=0"
 			},
+			{
 				name: "US Army Chaplain Center and School",
 				nickname: "",
 				description: "On a black lozenge 2 inches (5.08cm) in width and 3 inches (7.62cm) in height with rounded corners, a yellow torch surmounted by a white open book, gilded yellow with a red cover, emitting yellow rays to either side.",
@@ -568,7 +574,7 @@
 		const colors = [...new Set(insigniaData.flatMap(i => i.colors))].sort();
 
 		// Create filter buttons
-		function createFilterButtons(container, items, filterType) {
+ function createFilterButtons(container, items, filterType) {
 			container.innerHTML = items.map(item => 
 				`<button class="filter-btn" data-type="${filterType}" data-value="${item}">${item}</button>`
 			).join('');
@@ -617,51 +623,79 @@
 
 		// Filter and render insignia
 		function renderInsignia() {
-			const filtered = insigniaData.filter(insignia => {
+			const cards = document.querySelectorAll('.insignia-card');
+			let visibleCount = 0;
+
+			cards.forEach((card, index) => {
+				const insignia = insigniaData[index];
+				let isVisible = true;
+
 				// Search filter
 				if (activeFilters.search) {
 					const searchTerm = activeFilters.search;
 					const searchableText = `${insignia.name} ${insignia.nickname} ${insignia.description}`.toLowerCase();
-					if (!searchableText.includes(searchTerm)) return false;
+					if (!searchableText.includes(searchTerm)) isVisible = false;
 				}
 
-				// Shape filter
+				// Shape filter - must match if any shapes are selected
 				if (activeFilters.shape.length > 0) {
-					if (!activeFilters.shape.includes(insignia.shape)) return false;
+					if (!activeFilters.shape.includes(insignia.shape)) isVisible = false;
 				}
 
-				// Features filter
+				// Features filter - must have ALL selected features
 				if (activeFilters.features.length > 0) {
-					if (!activeFilters.features.some(f => insignia.features.includes(f))) return false;
+					const hasAllFeatures = activeFilters.features.every(f => insignia.features.includes(f));
+					if (!hasAllFeatures) isVisible = false;
 				}
 
-				// Colors filter
+				// Colors filter - must have ALL selected colors
 				if (activeFilters.colors.length > 0) {
-					if (!activeFilters.colors.some(c => insignia.colors.includes(c))) return false;
+					const hasAllColors = activeFilters.colors.every(c => insignia.colors.includes(c));
+					if (!hasAllColors) isVisible = false;
 				}
 
-				return true;
+				// Toggle visibility
+				if (isVisible) {
+					card.classList.add('visible');
+					visibleCount++;
+				} else {
+					card.classList.remove('visible');
+				}
 			});
 
-			const grid = document.getElementById('insigniaGrid');
 			const resultsInfo = document.getElementById('resultsInfo');
+			resultsInfo.textContent = `Showing ${visibleCount} of ${insigniaData.length} insignia`;
+
+			// Show no results message
+			const grid = document.getElementById('insigniaGrid');
+			let noResultsMsg = grid.querySelector('.no-results');
 			
-			resultsInfo.textContent = `Showing ${filtered.length} of ${insigniaData.length} insignia`;
-
-			if (filtered.length === 0) {
-				grid.innerHTML = '<div class="no-results">No insignia match your filters. Try adjusting your selection.</div>';
-				return;
+			if (visibleCount === 0) {
+				if (!noResultsMsg) {
+					noResultsMsg = document.createElement('div');
+					noResultsMsg.className = 'no-results';
+					noResultsMsg.textContent = 'No insignia match your filters. Try adjusting your selection.';
+					grid.appendChild(noResultsMsg);
+				}
+				noResultsMsg.style.display = 'block';
+			} else {
+				if (noResultsMsg) {
+					noResultsMsg.style.display = 'none';
+				}
 			}
+		}
 
-			grid.innerHTML = filtered.map(insignia => `
-				<div class="insignia-card">
+		// Initial render - create all cards once
+		function initializeCards() {
+			const grid = document.getElementById('insigniaGrid');
+			grid.innerHTML = insigniaData.map(insignia => `
+				<div class="insignia-card visible">
 					<div class="insignia-image">
 						<img src="${insignia.image}" alt="${insignia.name}" onerror="this.parentElement.innerHTML='<span style=\\'font-size: 4em; color: #888;\\'>🎖️</span>'">
 					</div>
 					<div class="insignia-name">${insignia.name}</div>
-					<!-- <div class="insignia-nickname">"${insignia.nickname}"</div> -->
+					<div class="insignia-nickname">"${insignia.nickname}"</div>
 					<div class="insignia-description">${insignia.description}</div>
-					<div class="insignia-link"><a href="${insignia.link}" target="_new">Army Institute of Heraldry page ☍</a></div>
 					<div class="insignia-tags">
 						<span class="tag">${insignia.shape}</span>
 						${insignia.features.map(f => `<span class="tag">${f}</span>`).join('')}
@@ -670,8 +704,9 @@
 			`).join('');
 		}
 
-		// Initial render
-		renderInsignia();
+		// Initialize
+		initializeCards();
+		document.getElementById('resultsInfo').textContent = `Showing ${insigniaData.length} of ${insigniaData.length} insignia`;
 	</script>
 </body>
 </html>

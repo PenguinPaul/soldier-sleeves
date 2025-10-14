@@ -530,6 +530,46 @@
 				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=8296&CategoryId=4609&grp=3&menu=Uniformed%20Services&ps=24&p=0"
 			},
 			{
+				name: "108th Training Command",
+				nickname: "",
+				description: "On a red seven-sided polygon one side up of 1 5/16 inches (3.33cm) circumscribing radius, a yellow griffin passant.",
+				shape: "Septagon",
+				features: ["Animal","Dragon", "Griffin"],
+				colors: ["Red", "Gray", "Blue"],
+				image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=4401&size=150",
+				link: "https://tioh.army.mil/Catalog/HeraldryMulti.aspx?CategoryId=3997&grp=2&menu=Uniformed%20Services"
+			},
+			{
+				name: "95th Training Division",
+				nickname: "",
+				description: "On a Blue oval 3 1/4 inches (8.26 cm) in height and 2 1/4 inches (5.72 cm) in width a white Roman V interlaced with a Red numeral 9 fimbriated Argent, the lower arm of the figure 9 extending over the base of the V, the dexter arm of the V extending under the upper curve of the 9, and the sinister arm of the V extending over the upper curve of the 9.",
+				shape: "Oval",
+				features: ["Number","Letter"],
+				colors: ["Red", "Gray", "Blue"],
+				image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=3103&size=150",
+				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=5795&CategoryId=3319&grp=2&menu=Uniformed%20Services&ps=24&p=0"
+			},
+			{
+				name: "98th Training Division",
+				nickname: "",
+				description: "On a blue shield of the shape of the shield on the great seal of the State of New York, within an 1/8 inch (.32cm) orange border an Indian head in profile with five feathers in top knot in orange. The overall dimensions of the shield are 3 inches (7.62cm) in height and 2 1/4 inches (5.72cm) in width.",
+				shape: "Shield",
+				features: ["Person"],
+				colors: ["Blue", "Orange"],
+				image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=4397&size=150",
+				link: "https://tioh.army.mil/Catalog/HeraldryMulti.aspx?CategoryId=3995&grp=2&menu=Uniformed%20Services"
+			},
+			{
+				name: "104th Training Division",
+				nickname: "",
+				description: "On a green disc with a 1/8 inch (.32 cm) dark green border 2 3/4 inches (6.99 cm) in diameter overall, the head of a timber wolf in gray.",
+				shape: "Circle",
+				features: ["Animal", "Wolf"],
+				colors: ["Green", "Gray"],
+				image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=3107&size=150",
+				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=5800&CategoryId=3321&grp=2&menu=Uniformed%20Services&ps=24&p=0"
+			},
+			{
 				name: "7th Transportation Brigade",
 				nickname: "The Army's Navy",
 				description: "On a brick red shield within a 1/8 inch (.32 cm) golden yellow border, 3 inches (7.62 cm) in height and 2 inches (5.08 cm) in width overall, issuing from the center point throughout seven golden yellow rays surmounted by a blue chess-rook.",
@@ -574,7 +614,7 @@
 		const colors = [...new Set(insigniaData.flatMap(i => i.colors))].sort();
 
 		// Create filter buttons
- function createFilterButtons(container, items, filterType) {
+		function createFilterButtons(container, items, filterType) {
 			container.innerHTML = items.map(item => 
 				`<button class="filter-btn" data-type="${filterType}" data-value="${item}">${item}</button>`
 			).join('');
@@ -694,10 +734,11 @@
 						<img src="${insignia.image}" alt="${insignia.name}" onerror="this.parentElement.innerHTML='<span style=\\'font-size: 4em; color: #888;\\'>🎖️</span>'">
 					</div>
 					<div class="insignia-name">${insignia.name}</div>
-					<div class="insignia-nickname">"${insignia.nickname}"</div>
+					<!--<div class="insignia-nickname">"${insignia.nickname}"</div>-->
 					<div class="insignia-description">${insignia.description}</div>
+					<div class="insignia-link"><a href="${insignia.link}" target="_new">Army Institute of Heraldry page</a></div>
 					<div class="insignia-tags">
-						<span class="tag">${insignia.shape}</span>
+						<span class="tag">Shape: ${insignia.shape}</span>
 						${insignia.features.map(f => `<span class="tag">${f}</span>`).join('')}
 					</div>
 				</div>

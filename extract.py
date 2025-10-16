@@ -27,8 +27,37 @@ def extract_insignia_data(url):
 		
 		# Extract unit name (usually in a specific element, adjust as needed)
 		# This may need adjustment based on actual page structure
-		title_elem = soup.find('span', id='ContentPlaceHolder1_ucHeraldryDetails_ucHeraldryInfo_lblTitle')
-		unit_name = title_elem.get_text(strip=True) if title_elem else "Unknown Unit"
+		title_elem = soup.find('span', id='ContentPlaceHolder1_lblTitle')
+		if title_elem:
+			unit_name = title_elem.get_text(strip=True)
+			# Convert from ALL CAPS to proper Title Case
+			# Handle ordinal numbers (1ST, 2ND, 3RD, 4TH, etc.)
+			import re
+			def smart_title_case(text):
+				words = text.split()
+				result = []
+				for word in words:
+					# Check if word is an ordinal number (1ST, 2ND, 3RD, 4TH, etc.)
+					# Also handles 2D, 3D variants
+					if re.match(r'^\d+(ST|ND|RD|TH|D)$', word, re.IGNORECASE):
+						# Normalize 2D -> 2nd, 3D -> 3rd
+						num = re.match(r'^(\d+)', word).group(1)
+						if word.upper().endswith('D') and not word.upper().endswith('ND') and not word.upper().endswith('RD'):
+							if num == '2':
+								result.append(num + 'nd')
+							elif num == '3':
+								result.append(num + 'rd')
+							else:
+								result.append(word.lower())
+						else:
+							result.append(word.lower())
+					else:
+						result.append(word.capitalize())
+				return ' '.join(result)
+			unit_name = smart_title_case(unit_name)
+			unit_name = unit_name.replace("Element, Joint Force Headquarters", "JFHQ")
+		else:
+			unit_name = "Unknown Unit"
 		
 		return {
 			'description': description,
@@ -45,15 +74,15 @@ def get_user_input():
 	print("\n--- Enter Unit Details ---")
 	name = input("Unit Name (or press Enter to use extracted): ").strip()
 	nickname = input("Nickname: ").strip()
-	shape = input("Shape (e.g., Shield, Circle, Triangle): ").strip()
+	shape = input("Shape (e.g., Shield, Circle, Triangle): ").strip().capitalize()
 	
 	print("\nEnter colors (comma-separated, e.g., Red, White, Blue):")
 	colors_input = input("Colors: ").strip()
-	colors = [c.strip() for c in colors_input.split(',') if c.strip()]
+	colors = [c.strip().capitalize() for c in colors_input.split(',') if c.strip()]
 	
 	print("\nEnter features (comma-separated, e.g., Eagle, Star, Sword):")
 	features_input = input("Features: ").strip()
-	features = [f.strip() for f in features_input.split(',') if f.strip()]
+	features = [f.strip().capitalize() for f in features_input.split(',') if f.strip()]
 	
 	return {
 		'name': name,

@@ -1,7 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<!--- MIT License
+	Copyright (c) 2025 Paul Hedman
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE. -->
 	<meta charset="UTF-8">
+	<meta name="description" content="Search through U.S. Army Shoulder Sleeve Insignia Patches">
+	<meta name="keywords" content="army, shoulder sleeve insignia, heraldry, patches, insignia">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Soldier Sleeves • SSI.ninja</title>
 	<style>
@@ -31,6 +53,10 @@
 			background: rgba(255, 255, 255, 0.05);
 			border-radius: 15px;
 			backdrop-filter: blur(10px);
+		}
+		
+		footer {
+			text-align: center;
 		}
 
 		h1 {
@@ -298,6 +324,9 @@
 
 		<div class="results-info" id="resultsInfo"></div>
 		<div class="insignia-grid" id="insigniaGrid"></div>
+		<footer>
+			<p class="subtitle" id="copyright">Website code is released under the MIT License. Insignia and descriptions are works of the U.S. Goverment and in the public domain.</p>
+		</footer>
 	</div>
 
 	<script>
@@ -1843,6 +1872,16 @@
 				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=12474&CategoryId=7499&grp=2"
 			},
 			{
+				name: "Army National Guard Recruiting and Retention Force",
+				nickname: "",
+				description: "On a blue isosceles triangle with all angles rounded, fifty-four (54) white stars around the circumference, surmounted by a red triangle edged with a 1/32 inch (.08 cm) white border, bearing a white image of the Minute Man statue by Daniel French, facing to the left, shaded and detailed silver gray, all within a 1/8 inch (.32 cm) red border. Attached below two red vertical stacked scrolls edged with a 1/8 inch (.32 cm) red border and a 1/32 inch (.08 cm) blue border between the scrolls and inscribed on top \"NATIONAL GUARD\" and on the bottom \"RECRUITING & RETENTION\" in blue letters. Overall dimensions are 3 1/2 inches (8.89 cm) in width and 4 3/16 inches (11.12 cm) in length.",
+				shape: "Triangle",
+				features: ["Person", "Weapon", "Gun"],
+				colors: ["Red", "White", "Blue"],
+				image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=2408&size=150",
+				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=5073&CategoryId=2888&grp=2"
+			},
+			{
 				name: "ROTC Cadet Command",
 				nickname: "",
 				description: "A shield arced at top and bottom 3 1/2 inches (8.89cm) in height and 2 1/2 inches (6.35cm) in width, consisting of a field divided quarterly yellow and black and thereon at upper right, a yellow Lamp of Knowledge enflamed; at lower left, a yellow Trojan helmet; and diagonally across the yellow quarters, a black sword point up, all between two yellow panels outlined black and inscribed in black letters 5/16 inch (.79cm) in height, \"LEADERSHIP\" at top and \"EXCELLENCE\" below, all within a 1/8 inch (.32cm) black border.",
@@ -1852,16 +1891,6 @@
 				image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=2487&size=150",
 				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=5161&CategoryId=2944&grp=2"
 			},
-			{
-				name: "Army National Guard Recruiting And Retention Force",
-				nickname: "",
-				description: "On a blue isosceles triangle with all angles rounded, fifty-four (54) white stars around the circumference, surmounted by a red triangle edged with a 1/32 inch (.08 cm) white border, bearing a white image of the Minute Man statue by Daniel French, facing to the left, shaded and detailed silver gray, all within a 1/8 inch (.32 cm) red border. Attached below two red vertical stacked scrolls edged with a 1/8 inch (.32 cm) red border and a 1/32 inch (.08 cm) blue border between the scrolls and inscribed on top \"NATIONAL GUARD\" and on the bottom \"RECRUITING & RETENTION\" in blue letters. Overall dimensions are 3 1/2 inches (8.89 cm) in width and 4 3/16 inches (11.12 cm) in length.",
-				shape: "Triangle",
-				features: ["Person", "Weapon", "Gun"],
-				colors: ["Red", "White", "Blue"],
-				image: "https://tioh.army.mil/Handlers/ThumbnailHandler.ashx?id=2408&size=150",
-				link: "https://tioh.army.mil/Catalog/Heraldry.aspx?HeraldryId=5073&CategoryId=2888&grp=2"
-			}
 		];
 
 		let activeFilters = {
